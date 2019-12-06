@@ -10,3 +10,28 @@ export const formatTime = (date) => {
 
   return `${hours}:${minutes} ${interval}`;
 };
+
+export const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`,
+};
+
+export const createElement = (template) => {
+  const newElemment = document.createElement(`div`);
+  newElemment.innerHTML = template;
+
+  return newElemment.firstChild;
+};
+
+export const render = (container, element, place) => {
+  switch (place) {
+    case RenderPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case RenderPosition.BEFOREEND:
+      container.append(element);
+      break;
+    default:
+      break;
+  }
+};

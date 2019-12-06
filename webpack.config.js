@@ -10,7 +10,6 @@ module.exports = {
   devtool: `sourcemap`,
   devServer: {
     contentBase: path.join(__dirname, `public`),
-    publicPath: `http://localhost:8080/`, // Веб адрес
     compress: true,
     watchContentBase: true
   }
