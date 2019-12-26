@@ -3,7 +3,7 @@ import {COLORS} from '../const.js';
 const DescriptionItems = [
   `Изучить теорию`,
   `Сделать домашку`,
-  `Пройти интенсив на соточку`
+  `Пройти интенсив на соточку`,
 ];
 
 const DefaultRepeatingDays = {
@@ -31,7 +31,7 @@ const getRandomArrayItem = (array) => {
 };
 
 const getRandomIntegerNumber = (min, max) => {
-  return min + Math.floor(max * Math.random());
+  return min + Math.floor((max - min) * Math.random());
 };
 
 const getRandomDate = () => {
