@@ -3,7 +3,7 @@ import {COLORS} from '../const.js';
 const DescriptionItems = [
   `Изучить теорию`,
   `Сделать домашку`,
-  `Пройти интенсив на соточку`
+  `Пройти интенсив на соточку`,
 ];
 
 const DefaultRepeatingDays = {

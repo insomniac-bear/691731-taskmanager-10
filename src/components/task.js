@@ -1,15 +1,15 @@
 import AbstractComponent from './abstract-component.js';
 import {formatTime, formatDate} from '../utils/common.js';
 
-const createHashTagsMarkup = (hashtags) => {
+const createHashtagsMarkup = (hashtags) => {
   return hashtags
     .map((hashtag) => {
       return (
         `<span class="card__hashtag-inner">
-          <span class="card__hashtag-name">
-            #${hashtag}
-          </span>
-        </span>`
+            <span class="card__hashtag-name">
+              #${hashtag}
+            </span>
+          </span>`
       );
     })
     .join(`\n`);
@@ -19,13 +19,16 @@ const createButtonMarkup = (name, isActive) => {
   return (
     `<button
       type="button"
-      class="card__btn card__btn--${name} ${isActive ? `` : `card__btn--disabled`}">
+      class="card__btn card__btn--${name} ${isActive ? `` : `card__btn--disabled`}"
+    >
       ${name}
     </button>`
   );
 };
 
 const createTaskTemplate = (task) => {
+  // Все работу производим заранее. Внутри шаблонной строки никаких вычислений не делаем,
+  // потому что внутри большой разметки сложно искать какой-либо код.
   const {description, tags, dueDate, color, repeatingDays} = task;
 
   const isExpired = dueDate instanceof Date && dueDate < Date.now();
@@ -34,7 +37,7 @@ const createTaskTemplate = (task) => {
   const date = isDateShowing ? formatDate(dueDate) : ``;
   const time = isDateShowing ? formatTime(dueDate) : ``;
 
-  const hashtags = createHashTagsMarkup(Array.from(tags));
+  const hashtags = createHashtagsMarkup(Array.from(tags));
   const editButton = createButtonMarkup(`edit`, true);
   const archiveButton = createButtonMarkup(`archive`, task.isArchive);
   const favoritesButton = createButtonMarkup(`favorites`, task.isFavorite);
@@ -51,17 +54,14 @@ const createTaskTemplate = (task) => {
             ${archiveButton}
             ${favoritesButton}
           </div>
-
           <div class="card__color-bar">
             <svg class="card__color-bar-wave" width="100%" height="10">
               <use xlink:href="#wave"></use>
             </svg>
           </div>
-
           <div class="card__textarea-wrap">
             <p class="card__text">${description}</p>
           </div>
-
           <div class="card__settings">
             <div class="card__details">
               <div class="card__dates">
@@ -72,18 +72,17 @@ const createTaskTemplate = (task) => {
                   </p>
                 </div>
               </div>
-
               <div class="card__hashtag">
                 <div class="card__hashtag-list">
-                 ${hashtags}
+                  ${hashtags}
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </article>
-  `);
+    </article>`
+  );
 };
 
 export default class Task extends AbstractComponent {

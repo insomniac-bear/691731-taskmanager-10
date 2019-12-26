@@ -81,7 +81,8 @@ const createTaskEditTemplate = (task, options = {}) => {
   const {isDateShowing, isRepeatingTask, activeRepeatingDays} = options;
 
   const isExpired = dueDate instanceof Date && dueDate < Date.now();
-  const isBlockSaveButton = (isDateShowing && isRepeatingTask) || (isRepeatingTask && !isRepeating(activeRepeatingDays));
+  const isBlockSaveButton = (isDateShowing && isRepeatingTask) ||
+    (isRepeatingTask && !isRepeating(activeRepeatingDays));
 
   const date = (isDateShowing && dueDate) ? formatDate(dueDate) : ``;
   const time = (isDateShowing && dueDate) ? formatTime(dueDate) : ``;
@@ -102,7 +103,6 @@ const createTaskEditTemplate = (task, options = {}) => {
                 <use xlink:href="#wave"></use>
               </svg>
             </div>
-  
             <div class="card__textarea-wrap">
               <label>
                 <textarea
@@ -112,14 +112,12 @@ const createTaskEditTemplate = (task, options = {}) => {
                 >${description}</textarea>
               </label>
             </div>
-  
             <div class="card__settings">
               <div class="card__details">
                 <div class="card__dates">
                   <button class="card__date-deadline-toggle" type="button">
                     date: <span class="card__date-status">${isDateShowing ? `yes` : `no`}</span>
                   </button>
-  
                   ${
     isDateShowing ?
       `<fieldset class="card__date-deadline">
@@ -135,11 +133,9 @@ const createTaskEditTemplate = (task, options = {}) => {
                       </fieldset>`
       : ``
     }
-  
                   <button class="card__repeat-toggle" type="button">
                     repeat:<span class="card__repeat-status">${isRepeatingTask ? `yes` : `no`}</span>
                   </button>
-  
                   ${
     isRepeatingTask ?
       `<fieldset class="card__repeat-days">
@@ -150,12 +146,10 @@ const createTaskEditTemplate = (task, options = {}) => {
       : ``
     }
                 </div>
-  
                 <div class="card__hashtag">
                   <div class="card__hashtag-list">
                     ${tagsMarkup}
                   </div>
-  
                   <label>
                     <input
                       type="text"
@@ -166,7 +160,6 @@ const createTaskEditTemplate = (task, options = {}) => {
                   </label>
                 </div>
               </div>
-  
               <div class="card__colors-inner">
                 <h3 class="card__colors-title">Color</h3>
                 <div class="card__colors-wrap">
@@ -174,7 +167,6 @@ const createTaskEditTemplate = (task, options = {}) => {
                 </div>
               </div>
             </div>
-  
             <div class="card__status-btns">
               <button class="card__save" type="submit" ${isBlockSaveButton ? `disabled` : ``}>save</button>
               <button class="card__delete" type="button">delete</button>
@@ -209,12 +201,12 @@ export default class TaskEdit extends AbstractSmartComponent {
   }
 
   recoveryListeners() {
-    this.setSubmitHandler(this._setSubmitHandler);
+    this.setSubmitHandler(this._submitHandler);
     this._subscribeOnEvents();
   }
 
-  render() {
-    super.render();
+  rerender() {
+    super.rerender();
 
     this._applyFlatpickr();
   }
@@ -226,7 +218,7 @@ export default class TaskEdit extends AbstractSmartComponent {
     this._isRepeatingTask = Object.values(task.repeatingDays).some(Boolean);
     this._activeRepeatingDays = Object.assign({}, task.repeatingDays);
 
-    this.render();
+    this.rerender();
   }
 
   setSubmitHandler(handler) {
@@ -238,6 +230,8 @@ export default class TaskEdit extends AbstractSmartComponent {
 
   _applyFlatpickr() {
     if (this._flatpickr) {
+      // При своем создании `flatpickr` дополнительно создает вспомогательные DOM-элементы.
+      // Что бы их удалять, нужно вызывать метод `destroy` у созданного инстанса `flatpickr`.
       this._flatpickr.destroy();
       this._flatpickr = null;
     }
@@ -259,14 +253,14 @@ export default class TaskEdit extends AbstractSmartComponent {
       .addEventListener(`click`, () => {
         this._isDateShowing = !this._isDateShowing;
 
-        this.render();
+        this.rerender();
       });
 
     element.querySelector(`.card__repeat-toggle`)
       .addEventListener(`click`, () => {
         this._isRepeatingTask = !this._isRepeatingTask;
 
-        this.render();
+        this.rerender();
       });
 
     const repeatDays = element.querySelector(`.card__repeat-days`);
@@ -274,7 +268,7 @@ export default class TaskEdit extends AbstractSmartComponent {
       repeatDays.addEventListener(`change`, (evt) => {
         this._activeRepeatingDays[evt.target.value] = evt.target.checked;
 
-        this.render();
+        this.rerender();
       });
     }
   }
